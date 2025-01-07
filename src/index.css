@@ -4,5 +4,37 @@
 @tailwind utilities;
 :root {
    font-family: "Poppins",sans-serif;
-   color-scheme: dark;
+   /*color-scheme: white;*/
+}
+/* Styles for the calculator */
+h1 {
+   text-align: center;
+   margin-bottom: 20px;
+}
+
+input[type="number"] {
+   display: block; /* Make the input a block element */
+   margin: 0 auto; /* Center the input */
+   padding: 10px; /* Add padding */
+   border: 2px solid #ccc; /* Border style */
+   border-radius: 5px; /* Rounded corners */
+   width: 200px; /* Set a width */
+   background-color: #f0e68c; /* Custom input color */
+   font-size: 16px; /* Font size */
+}
+
+button {
+   display: block; /* Make the button a block element */
+   margin: 20px auto; /* Center the button */
+   padding: 10px 20px; /* Add padding */
+   border: none; /* No border */
+   border-radius: 5px; /* Rounded corners */
+   background-color: blue; /* Button color */
+   color: white; /* Text color */
+   font-size: 16px; /* Font size */
+   cursor: pointer; /* Pointer on hover */
+}
+
+button:hover {
+   background-color: darkblue; /* Darker shade on hover */
 }

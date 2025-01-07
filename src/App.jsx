@@ -3,8 +3,9 @@ import Navbar from "./components/Navbar"
 const App = () => {
   return (
     <>
-    <h1>am back in development soon</h1>
-     <Navbar/>
+    <h1>simple calculator</h1>
+    <input type="number" />
+     <button>equal</button>
     </>
   )
 }
