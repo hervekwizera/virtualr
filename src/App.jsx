@@ -5,6 +5,8 @@ const App = () => {
   const [previousValue, setPreviousValue] = useState(null);
   const [operation, setOperation] = useState(null);
   const [waitingForOperand, setWaitingForOperand] = useState(false);
+  const [memory, setMemory] = useState(0);
+  const [isRadians, setIsRadians] = useState(true);
 
   const inputNumber = (num) => {
     if (waitingForOperand) {
@@ -58,11 +60,91 @@ const App = () => {
         return firstValue * secondValue;
       case '/':
         return firstValue / secondValue;
+      case '^':
+        return Math.pow(firstValue, secondValue);
       case '=':
         return secondValue;
       default:
         return secondValue;
     }
+  };
+
+  // Scientific functions
+  const performScientificOperation = (func) => {
+    const currentValue = parseFloat(display);
+    let result;
+
+    switch (func) {
+      case 'sin':
+        result = Math.sin(isRadians ? currentValue : (currentValue * Math.PI / 180));
+        break;
+      case 'cos':
+        result = Math.cos(isRadians ? currentValue : (currentValue * Math.PI / 180));
+        break;
+      case 'tan':
+        result = Math.tan(isRadians ? currentValue : (currentValue * Math.PI / 180));
+        break;
+      case 'log':
+        result = Math.log10(currentValue);
+        break;
+      case 'ln':
+        result = Math.log(currentValue);
+        break;
+      case 'sqrt':
+        result = Math.sqrt(currentValue);
+        break;
+      case 'square':
+        result = currentValue * currentValue;
+        break;
+      case 'factorial':
+        result = factorial(currentValue);
+        break;
+      case 'inverse':
+        result = 1 / currentValue;
+        break;
+      case 'pi':
+        result = Math.PI;
+        break;
+      case 'e':
+        result = Math.E;
+        break;
+      default:
+        result = currentValue;
+    }
+
+    setDisplay(String(result));
+    setWaitingForOperand(true);
+  };
+
+  const factorial = (n) => {
+    if (n < 0) return NaN;
+    if (n === 0 || n === 1) return 1;
+    if (n > 170) return Infinity; // Prevent overflow
+    let result = 1;
+    for (let i = 2; i <= n; i++) {
+      result *= i;
+    }
+    return result;
+  };
+
+  // Memory functions
+  const memoryAdd = () => {
+    setMemory(memory + parseFloat(display));
+    setWaitingForOperand(true);
+  };
+
+  const memorySubtract = () => {
+    setMemory(memory - parseFloat(display));
+    setWaitingForOperand(true);
+  };
+
+  const memoryRecall = () => {
+    setDisplay(String(memory));
+    setWaitingForOperand(true);
+  };
+
+  const memoryClear = () => {
+    setMemory(0);
   };
 
   const handleEquals = () => {
@@ -89,15 +171,138 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-700 flex items-center justify-center p-4">
-      <div className="bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-sm">
+      <div className="bg-gray-800 rounded-2xl shadow-2xl p-6 w-full max-w-2xl">
         {/* Display Screen */}
         <div className="bg-gray-900 rounded-lg p-4 mb-4 border-2 border-gray-700">
           <div className="text-right text-3xl font-mono text-green-400 min-h-[2.5rem] flex items-center justify-end overflow-hidden">
             {display}
           </div>
+          <div className="text-right text-sm text-gray-400 mt-1">
+            {memory !== 0 && `M: ${memory}`} | Mode: {isRadians ? 'RAD' : 'DEG'}
+          </div>
         </div>
 
-        {/* Button Grid */}
+        {/* Scientific Functions Row */}
+        <div className="grid grid-cols-6 gap-2 mb-3">
+          <Button
+            onClick={() => performScientificOperation('sin')}
+            className="bg-purple-600 hover:bg-purple-700 text-white text-sm"
+          >
+            sin
+          </Button>
+          <Button
+            onClick={() => performScientificOperation('cos')}
+            className="bg-purple-600 hover:bg-purple-700 text-white text-sm"
+          >
+            cos
+          </Button>
+          <Button
+            onClick={() => performScientificOperation('tan')}
+            className="bg-purple-600 hover:bg-purple-700 text-white text-sm"
+          >
+            tan
+          </Button>
+          <Button
+            onClick={() => performScientificOperation('log')}
+            className="bg-purple-600 hover:bg-purple-700 text-white text-sm"
+          >
+            log
+          </Button>
+          <Button
+            onClick={() => performScientificOperation('ln')}
+            className="bg-purple-600 hover:bg-purple-700 text-white text-sm"
+          >
+            ln
+          </Button>
+          <Button
+            onClick={() => setIsRadians(!isRadians)}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
+          >
+            {isRadians ? 'RAD' : 'DEG'}
+          </Button>
+        </div>
+
+        {/* Advanced Functions Row */}
+        <div className="grid grid-cols-6 gap-2 mb-3">
+          <Button
+            onClick={() => performScientificOperation('sqrt')}
+            className="bg-purple-600 hover:bg-purple-700 text-white text-sm"
+          >
+            √
+          </Button>
+          <Button
+            onClick={() => performScientificOperation('square')}
+            className="bg-purple-600 hover:bg-purple-700 text-white text-sm"
+          >
+            x²
+          </Button>
+          <Button
+            onClick={() => performOperation('^')}
+            className="bg-purple-600 hover:bg-purple-700 text-white text-sm"
+          >
+            x^y
+          </Button>
+          <Button
+            onClick={() => performScientificOperation('factorial')}
+            className="bg-purple-600 hover:bg-purple-700 text-white text-sm"
+          >
+            x!
+          </Button>
+          <Button
+            onClick={() => performScientificOperation('inverse')}
+            className="bg-purple-600 hover:bg-purple-700 text-white text-sm"
+          >
+            1/x
+          </Button>
+          <Button
+            onClick={() => performScientificOperation('pi')}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
+          >
+            π
+          </Button>
+        </div>
+
+        {/* Memory Functions Row */}
+        <div className="grid grid-cols-6 gap-2 mb-3">
+          <Button
+            onClick={memoryClear}
+            className="bg-yellow-600 hover:bg-yellow-700 text-white text-sm"
+          >
+            MC
+          </Button>
+          <Button
+            onClick={memoryRecall}
+            className="bg-yellow-600 hover:bg-yellow-700 text-white text-sm"
+          >
+            MR
+          </Button>
+          <Button
+            onClick={memoryAdd}
+            className="bg-yellow-600 hover:bg-yellow-700 text-white text-sm"
+          >
+            M+
+          </Button>
+          <Button
+            onClick={memorySubtract}
+            className="bg-yellow-600 hover:bg-yellow-700 text-white text-sm"
+          >
+            M-
+          </Button>
+          <Button
+            onClick={() => performScientificOperation('e')}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white text-sm"
+          >
+            e
+          </Button>
+          <Button
+            onClick={() => setDisplay(display.includes('(') ? display + ')' : display + '(')}
+            className="bg-orange-600 hover:bg-orange-700 text-white text-sm"
+          >
+            ( )
+          </Button>
+        </div>
+
+        {/* Main Calculator Grid */}
         <div className="grid grid-cols-4 gap-3">
           {/* Row 1 */}
           <Button
